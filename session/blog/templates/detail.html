@@ -1,9 +1,37 @@
-<h1>블로그 상세 페이지</h1>
+<body>
+    <h1>블로그 상세 페이지</h1>
+  </body>
+  <style>
+    body {
+      text-align: center;
+    }
+  </style>
 <br/>
 <hr/>
 <h2>{{blog.title}}</h2>
 <p>{{blog.content}}</p>
 <p>{{blog.created_at}}</p>
+<hr>
+
+
+<hr>
+
+
+<form action="{% url 'create_comment' blog.id %}" method="POST">
+{% csrf_token %}
+{{ comment_form }}
+<textarea name="content" cols="30"></textarea>
+<input type="submit" value="댓글">
+</form>
+{% if comments %}
+{% for comment in comments %}
+<p>댓글{{comment.id}} : {{comment.content}}</p> 
+{% endfor %}
+{% else %}
+<p>댓글이 존재하지 않습니다.</p>
+{% endif %}
+  
+
 
 <a href="{% url 'home' %}">홈</a>
 <a href="{% url 'edit' blog.id %}">수정하기</a>

@@ -11,3 +11,8 @@ class Blog(models.Model):
     
     def summary(self):
         return self.content[:100]
+    
+class Comment(models.Model):
+    content = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True)

@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Blog
-from .forms import BlogForm
+from .models import Blog, Comment
+from .forms import BlogForm, CommentForm
 
 
 def home(request):
@@ -9,7 +9,8 @@ def home(request):
 
 def detail(request, blog_id):
     blog = get_object_or_404(Blog, pk=blog_id)
-    return render(request,'detail.html',{'blog':blog})
+    comments = Comment.objects.filter(blog=blog)
+    return render(request,'detail.html',{'blog':blog, 'comments':comments})
 
 def new(request):
     return render(request,'new.html')
@@ -63,4 +64,10 @@ def delete(request, blog_id):
     return redirect('home')
 
 
-
+def create_comment(request, blog_id):
+    filled_form = CommentForm(request.POST)
+    if filled_form.is_valid():
+        finished_form = filled_form.save(commit=False)
+        finished_form.blog = get_object_or_404(Blog, pk=blog_id)
+        finished_form.save()
+    return redirect('detail', blog_id)
